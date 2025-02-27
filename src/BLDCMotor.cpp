@@ -377,6 +377,17 @@ void BLDCMotor::loopFOC() {
       // d voltage - lag compensation - TODO verify
       // if(_isset(phase_inductance)) voltage.d = _constrain( voltage.d - current_sp*shaft_velocity*pole_pairs*phase_inductance, -voltage_limit, voltage_limit);
       break;
+    case TorqueControlType::full_foc:
+      if(!current_sense) return;
+      // read dq currents
+      current = current_sense->getFOCCurrents(electrical_angle);
+      // filter values
+      current.q = LPF_current_q(current.q);
+      current.d = LPF_current_d(current.d);
+      // calculate the phase voltages and add to the feedback 
+      voltage.q += PID_current_q(current_sp - current.q);
+      voltage.d += PID_current_d(-current.d);
+
     default:
       // no torque control selected
       SIMPLEFOC_DEBUG("MOT: no torque control selected!");
@@ -423,7 +434,7 @@ void BLDCMotor::move(float new_target) {
   // upgrade the current based voltage limit
   switch (controller) {
     case MotionControlType::torque:
-      if(torque_controller == TorqueControlType::voltage){ // if voltage torque control
+      if(torque_controller == TorqueControlType::voltage || TorqueControlType::full_foc){ // if voltage torque control
         if(!_isset(phase_resistance))  voltage.q = target;
         else  voltage.q =  target*phase_resistance + voltage_bemf;
         voltage.q = _constrain(voltage.q, -voltage_limit, voltage_limit);
