@@ -1,6 +1,6 @@
 #include "FastInlineCurrentSense.h"
 #include "communication/SimpleFOCDebug.h"
-#include <algorithm>
+#include <numeric>
 
 // InlineCurrentSensor constructor
 //  - shunt_resistor  - shunt resistor value
@@ -80,7 +80,7 @@ void FastInlineCurrentSense::calibrateOffsets(){
     if(_isset(pinC)) offset_ic = offset_ic / calibration_rounds;
 }
 
-float getFilterCurrent(int pin, float offset, float gain)
+float FastInlineCurrentSense::getFilterCurrent(int pin, float offset, float gain)
 {
     const auto read = (_readADCVoltageInline(pin, params) - offset)*gain;
     current_readings.push_back(read);
