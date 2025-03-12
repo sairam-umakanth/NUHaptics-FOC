@@ -54,7 +54,7 @@ class FastInlineCurrentSense: public CurrentSense{
      */
     void calibrateOffsets();
 
-    float getFilterCurrent();
+    float getFilterCurrent(int pin, float offset, float gain);
 
 };
 
