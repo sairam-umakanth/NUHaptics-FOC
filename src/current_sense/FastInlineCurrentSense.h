@@ -45,10 +45,9 @@ class FastInlineCurrentSense: public CurrentSense{
     float amp_gain; //!< amp gain value
     float volts_to_amps_ratio; //!< Volts to amps ratio
 
-
     std::deque<float> current_readings{};
-    constexpr size_t filter_size = 4;
-    
+    const size_t filter_size = 4;
+
     /**
      *  Function finding zero offsets of the ADC
      */
