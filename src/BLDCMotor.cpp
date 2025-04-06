@@ -372,8 +372,8 @@ void BLDCMotor::loopFOC() {
       current.q = LPF_current_q(current.q);
       current.d = LPF_current_d(current.d);
       // calculate the phase voltages
-      voltage.q = PID_current_q(current_sp - current.q);
-      voltage.d = PID_current_d(-current.d);
+      voltage.q += PID_current_q(current_sp - current.q);
+      voltage.d += PID_current_d(-current.d);
       // d voltage - lag compensation - TODO verify
       // if(_isset(phase_inductance)) voltage.d = _constrain( voltage.d - current_sp*shaft_velocity*pole_pairs*phase_inductance, -voltage_limit, voltage_limit);
       break;
@@ -423,14 +423,13 @@ void BLDCMotor::move(float new_target) {
   // upgrade the current based voltage limit
   switch (controller) {
     case MotionControlType::torque:
-      if(torque_controller == TorqueControlType::voltage){ // if voltage torque control
-        if(!_isset(phase_resistance))  voltage.q = target;
-        else  voltage.q =  target*phase_resistance + voltage_bemf;
-        voltage.q = _constrain(voltage.q, -voltage_limit, voltage_limit);
-        // set d-component (lag compensation if known inductance)
-        if(!_isset(phase_inductance)) voltage.d = 0;
-        else voltage.d = _constrain( -target*shaft_velocity*pole_pairs*phase_inductance, -voltage_limit, voltage_limit);
-      }else{
+      if(!_isset(phase_resistance))  voltage.q = target;
+      else  voltage.q =  target*phase_resistance + voltage_bemf;
+      voltage.q = _constrain(voltage.q, -voltage_limit, voltage_limit);
+      // set d-component (lag compensation if known inductance)
+      if(!_isset(phase_inductance)) voltage.d = 0;
+      else voltage.d = _constrain( -target*shaft_velocity*pole_pairs*phase_inductance, -voltage_limit, voltage_limit);
+      if(torque_controller == TorqueControlType::foc_current){
         current_sp = target; // if current/foc_current torque control
       }
       break;
