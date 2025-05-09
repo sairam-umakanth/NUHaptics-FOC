@@ -31,8 +31,8 @@ class InlineCurrentSenseSPI: public CurrentSense{
 
     private:
         // gain variables
-        const float shunt_resistor; // Shunt resistor value
-        const float amp_gain; // amp gain value
+        float shunt_resistor; // Shunt resistor value
+        float amp_gain; // amp gain value
         float volts_to_amps_ratio; // Volts to amps ratio
 
         float offset_ia = 0; // Phase A current offset
