@@ -18,13 +18,13 @@ class InlineCurrentSenseSPI: public CurrentSense{
          * InlineCurrentSenseSPI class constructor
          * @param shunt_resistor shunt resistor value
          * @param gain current-sense op-amp gain
-         * @param spi SPIClass pointer for phase A
+         * @param spi SPIClass pointer
          * @param csA chip select pin for phase A
          * @param csB chip select pin for phase B
          * @param csC chip select pin for phase C
          */
         InlineCurrentSenseSPI(float shunt_resistor, float gain, SPIClass *spi, int csA, int csB, int csC)
-
+        
         // CurrentSense interface implementing functions
         int init() override;
         PhaseCurrent_s getPhaseCurrents() override;
@@ -43,7 +43,8 @@ class InlineCurrentSenseSPI: public CurrentSense{
         float gain_b; // Phase B current gain
         float gain_c; // Phase C current gain
 
-        SPIClass* spi // SPIClass pointer for phase A
+        SPIClass* spi // SPIClass pointer 
+        const SPISettings settings; // SPI settings for the ADC
         int csA; // chip select pin for phase A
         int csB; // chip select pin for phase B
         int csC; // chip select pin for phase C

@@ -13,10 +13,11 @@ InlineCurrentSenseSPI::InlineCurrentSenseSPI(float _shunt_resistor, float _gain,
     gain_c = volts_to_amps_ratio;
 
     pinA = -1; pinB = -1; pinC = -1; // Disable internal ADC
+
+    settings = SPISettings(1000000, MSBFIRST, SPI_MODE0); // SPI settings for the ADC
 }
 
 int InlineCurrentSenseSPI::init(){
-    const SPISettings settings(1000000, MSBFIRST, SPI_MODE0);
     pinMode(csA, OUTPUT);
     pinMode(csB, OUTPUT);
     pinMode(csC, OUTPUT);
@@ -34,18 +35,18 @@ void InlineCurrentSenseSPI::calibrateOffsets(){
     offset_ia = 0; offset_ib = 0; offset_ic = 0;
 
     for(int i=0; i<calibration_rounds; i++){
-        offset_ia += readADC(spi, csA);
-        offset_ib += readADC(spi, csB);
-        offset_ic += readADC(spi, csC);
+        offset_ia += readADC(settings, csA);
+        offset_ib += readADC(settings, csB);
+        offset_ic += readADC(settings, csC);
         _delay(1);
     }
 }
 
 PhaseCurrent_s InlineCurrentSenseSPI::getPhaseCurrents(){
     PhaseCurrent_s current;
-    current.a = (readADC(spi, csA) - offset_ia) * gain_a;
-    current.b = (readADC(spi, csB) - offset_ib) * gain_b;
-    current.c = (readADC(spi, csC) - offset_ic) * gain_c;
+    current.a = (readADC(settings, csA) - offset_ia) * gain_a;
+    current.b = (readADC(settings, csB) - offset_ib) * gain_b;
+    current.c = (readADC(settings, csC) - offset_ic) * gain_c;
     return current;
 }
 
