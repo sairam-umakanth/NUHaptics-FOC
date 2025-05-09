@@ -12,20 +12,23 @@ InlineCurrentSenseSPI::InlineCurrentSenseSPI(float _shunt_resistor, float _gain,
     gain_b = volts_to_amps_ratio;
     gain_c = volts_to_amps_ratio;
 
-    pinA = -1; pinB = -1; pinC = -1; // Disable internal ADC
-
-    settings = SPISettings(1000000, MSBFIRST, SPI_MODE0); // SPI settings for the ADC
 }
 
 int InlineCurrentSenseSPI::init(){
     pinMode(csA, OUTPUT);
     pinMode(csB, OUTPUT);
     pinMode(csC, OUTPUT);
-    digitalWrite(csA, HIGH);
-    digitalWrite(csB, HIGH);
-    digitalWrite(csC, HIGH);
+    digitalWriteFast(csA, HIGH);
+    digitalWriteFast(csB, HIGH);
+    digitalWriteFast(csC, HIGH);
 
+    // set the center pwm (0 voltage vector)
+    if(driver_type==DriverType::BLDC)
+        static_cast<BLDCDriver*>(driver)->setPwm(driver->voltage_limit/2, driver->voltage_limit/2, driver->voltage_limit/2);
     calibrateOffsets();
+    // set zero voltage to all phases
+    if(driver_type==DriverType::BLDC)
+        static_cast<BLDCDriver*>(driver)->setPwm(0,0,0);
     initialized = true;
     return 1;
 }
@@ -50,12 +53,12 @@ PhaseCurrent_s InlineCurrentSenseSPI::getPhaseCurrents(){
     return current;
 }
 
-float InlineCurrentSenseSPI::readADC(SPISettings settings, int cs_pin){
+float InlineCurrentSenseSPI::readADC(const int cs_pin) const{
     uint16_t raw;
     spi->beginTransaction(settings);
-    digitalWrite(cs_pin, LOW);
+    digitalWriteFast(cs_pin, LOW);
     raw = spi->transfer16(0x0000); // ADS7044 returns 12 MSBs of data in top bits
-    digitalWrite(cs_pin, HIGH);
+    digitalWriteFast(cs_pin, HIGH);
     spi->endTransaction();
 
     raw = raw>>4;

@@ -31,29 +31,29 @@ class InlineCurrentSenseSPI: public CurrentSense{
 
     private:
         // gain variables
-        float shunt_resistor; // Shunt resistor value
-        float amp_gain; // amp gain value
+        const float shunt_resistor; // Shunt resistor value
+        const float amp_gain; // amp gain value
         float volts_to_amps_ratio; // Volts to amps ratio
 
         float offset_ia = 0; // Phase A current offset
         float offset_ib = 0; // Phase B current offset
         float offset_ic = 0; // Phase C current offset
 
-        float gain_a; // Phase A current gain
-        float gain_b; // Phase B current gain
-        float gain_c; // Phase C current gain
+        float gain_a = 0; // Phase A current gain
+        float gain_b = 0; // Phase B current gain
+        float gain_c = 0; // Phase C current gain
 
-        SPIClass* spi; // SPIClass pointer 
-        SPISettings settings; // SPI settings for the ADC
-        int csA; // chip select pin for phase A
-        int csB; // chip select pin for phase B
-        int csC; // chip select pin for phase C
+        const SPIClass* spi; // SPIClass pointer 
+        const SPISettings settings = SPISettings(1000000, MSBFIRST, SPI_MODE0); // SPI settings for the ADC
+        const int csA; // chip select pin for phase A
+        const int csB; // chip select pin for phase B
+        const int csC; // chip select pin for phase C
 
         /*
         Function for finding zero offsets of ADC and reading ADC off SPI
         */
         void calibrateOffsets();
-        float readADC(SPISettings settings, int cs_pin);
+        float readADC(const int cs_pin) const;
 };
 
 #endif
