@@ -38,18 +38,18 @@ void InlineCurrentSenseSPI::calibrateOffsets(){
     offset_ia = 0; offset_ib = 0; offset_ic = 0;
 
     for(int i=0; i<calibration_rounds; i++){
-        offset_ia += readADC(settings, csA);
-        offset_ib += readADC(settings, csB);
-        offset_ic += readADC(settings, csC);
+        offset_ia += readADC(csA);
+        offset_ib += readADC(csB);
+        offset_ic += readADC(csC);
         _delay(1);
     }
 }
 
 PhaseCurrent_s InlineCurrentSenseSPI::getPhaseCurrents(){
     PhaseCurrent_s current;
-    current.a = (readADC(settings, csA) - offset_ia) * gain_a;
-    current.b = (readADC(settings, csB) - offset_ib) * gain_b;
-    current.c = (readADC(settings, csC) - offset_ic) * gain_c;
+    current.a = (readADC(csA) - offset_ia) * gain_a;
+    current.b = (readADC(csB) - offset_ib) * gain_b;
+    current.c = (readADC(csC) - offset_ic) * gain_c;
     return current;
 }
 
