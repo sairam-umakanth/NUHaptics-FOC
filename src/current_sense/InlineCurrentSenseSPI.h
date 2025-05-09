@@ -23,7 +23,7 @@ class InlineCurrentSenseSPI: public CurrentSense{
          * @param csB chip select pin for phase B
          * @param csC chip select pin for phase C
          */
-        InlineCurrentSenseSPI(float shunt_resistor, float gain, SPIClass *spi, int csA, int csB, int csC)
+        InlineCurrentSenseSPI(float shunt_resistor, float gain, SPIClass *spi, int csA, int csB, int csC);
         
         // CurrentSense interface implementing functions
         int init() override;
@@ -43,8 +43,8 @@ class InlineCurrentSenseSPI: public CurrentSense{
         float gain_b; // Phase B current gain
         float gain_c; // Phase C current gain
 
-        SPIClass* spi // SPIClass pointer 
-        const SPISettings settings; // SPI settings for the ADC
+        SPIClass* spi; // SPIClass pointer 
+        SPISettings settings; // SPI settings for the ADC
         int csA; // chip select pin for phase A
         int csB; // chip select pin for phase B
         int csC; // chip select pin for phase C

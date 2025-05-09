@@ -1,7 +1,7 @@
 #include "InlineCurrentSenseSPI.h"
 #include "../communication/SimpleFOCDebug.h"
 
-InlineCurrentSenseSPI::InlineCurrentSenseSPI(float _shunt_resistor, float _gain, SPIClass* spi, int csA, int csB, int csC)
+InlineCurrentSenseSPI::InlineCurrentSenseSPI(float _shunt_resistor, float _gain, SPIClass* _spi, int _csA, int _csB, int _csC)
     : spi(_spi), csA(_csA), csB(_csB), csC(_csC) {
         
     shunt_resistor = _shunt_resistor;
