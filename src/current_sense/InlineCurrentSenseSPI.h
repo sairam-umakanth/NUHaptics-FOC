@@ -52,7 +52,7 @@ class InlineCurrentSenseSPI: public CurrentSense{
         Function for finding zero offsets of ADC and reading ADC off SPI
         */
         void calibrateOffsets();
-        float readADCA(SPISettings settings, int cs_pin);
+        float readADC(SPISettings settings, int cs_pin);
 };
 
 #endif
