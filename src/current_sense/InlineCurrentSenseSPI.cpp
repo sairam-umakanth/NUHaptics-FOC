@@ -43,6 +43,9 @@ void InlineCurrentSenseSPI::calibrateOffsets(){
         offset_ic += readADC(csC);
         _delay(1);
     }
+    offset_ia /= calibration_rounds;
+    offset_ib /= calibration_rounds;
+    offset_ic /= calibration_rounds;
 }
 
 PhaseCurrent_s InlineCurrentSenseSPI::getPhaseCurrents(){
@@ -61,7 +64,9 @@ float InlineCurrentSenseSPI::readADC(const int cs_pin) const{
     digitalWriteFast(cs_pin, HIGH);
     spi->endTransaction();
 
-    raw = raw>>4;
-    float voltage = -3.3f + (6.6f * raw)/4095.0f;
+    raw = raw>>2; // shift to get 12 bits
+    int16_t signed_val = (raw >= 0x800) ? (static_cast<int16_t>(raw) - 0x1000) : static_cast<int16_t>(raw);
+    // convert to voltage
+    float voltage = static_cast<float>(signed_val) * 1.65f / 2047.0f; // 1.65V reference voltage, 12 bit ADC
     return voltage;
 }
