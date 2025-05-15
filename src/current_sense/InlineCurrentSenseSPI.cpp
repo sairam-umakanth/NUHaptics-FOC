@@ -1,5 +1,4 @@
 #include "InlineCurrentSenseSPI.h"
-#include "../communication/SimpleFOCDebug.h"
 
 InlineCurrentSenseSPI::InlineCurrentSenseSPI(float _shunt_resistor, float _gain, SPIClass* _spi, int _csA, int _csB, int _csC)
     : spi(_spi), csA(_csA), csB(_csB), csC(_csC) {
@@ -18,9 +17,9 @@ int InlineCurrentSenseSPI::init(){
     pinMode(csA, OUTPUT);
     pinMode(csB, OUTPUT);
     pinMode(csC, OUTPUT);
-    digitalWriteFast(csA, HIGH);
-    digitalWriteFast(csB, HIGH);
-    digitalWriteFast(csC, HIGH);
+    digitalWrite(csA, HIGH);
+    digitalWrite(csB, HIGH);
+    digitalWrite(csC, HIGH);
 
     // set the center pwm (0 voltage vector)
     if(driver_type==DriverType::BLDC)

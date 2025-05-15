@@ -1,8 +1,8 @@
 #ifndef SPI_INLINE_CS_LIB_H
 #define SPI_INLINE_CS_LIB_H
 
-#include "Arduino.h"
-#include "SPI.h"
+#include <Arduino.h>
+#include <SPI.h> 
 #include "../common/foc_utils.h"
 #include "../common/time_utils.h"
 #include "../common/defaults.h"
@@ -43,8 +43,8 @@ class InlineCurrentSenseSPI: public CurrentSense{
         float gain_b = 0; // Phase B current gain
         float gain_c = 0; // Phase C current gain
 
-        const SPIClass* spi; // SPIClass pointer 
-        const SPISettings settings = SPISettings(1000000, MSBFIRST, SPI_MODE0); // SPI settings for the ADC
+        SPIClass* spi; // SPIClass pointer 
+        SPISettings settings = SPISettings(1000000, MSBFIRST, SPI_MODE0); // SPI settings for the ADC
         const int csA; // chip select pin for phase A
         const int csB; // chip select pin for phase B
         const int csC; // chip select pin for phase C
