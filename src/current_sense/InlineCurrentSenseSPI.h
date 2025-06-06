@@ -1,8 +1,8 @@
 #ifndef SPI_INLINE_CS_LIB_H
 #define SPI_INLINE_CS_LIB_H
 
-#include "Arduino.h"
-#include "SPI.h"
+#include <Arduino.h>
+#include <SPI.h>
 #include "../common/foc_utils.h"
 #include "../common/time_utils.h"
 #include "../common/defaults.h"
