@@ -1,8 +1,8 @@
 #ifndef SPI_INLINE_CS_LIB_H
 #define SPI_INLINE_CS_LIB_H
 
-#include <Arduino.h>
-#include <SPI.h> 
+#include "Arduino.h"
+#include "SPI.h"
 #include "../common/foc_utils.h"
 #include "../common/time_utils.h"
 #include "../common/defaults.h"
@@ -21,9 +21,8 @@ class InlineCurrentSenseSPI: public CurrentSense{
          * @param spi SPIClass pointer
          * @param csA chip select pin for phase A
          * @param csB chip select pin for phase B
-         * @param csC chip select pin for phase C
          */
-        InlineCurrentSenseSPI(float shunt_resistor, float gain, SPIClass *spi, int csA, int csB, int csC);
+        InlineCurrentSenseSPI(float shunt_resistor, float gain, SPIClass *spi, int csA, int csB);
         
         // CurrentSense interface implementing functions
         int init() override;
@@ -37,17 +36,14 @@ class InlineCurrentSenseSPI: public CurrentSense{
 
         float offset_ia = 0; // Phase A current offset
         float offset_ib = 0; // Phase B current offset
-        float offset_ic = 0; // Phase C current offset
 
         float gain_a = 0; // Phase A current gain
         float gain_b = 0; // Phase B current gain
-        float gain_c = 0; // Phase C current gain
 
         SPIClass* spi; // SPIClass pointer 
         SPISettings settings = SPISettings(1000000, MSBFIRST, SPI_MODE0); // SPI settings for the ADC
         const int csA; // chip select pin for phase A
         const int csB; // chip select pin for phase B
-        const int csC; // chip select pin for phase C
 
         /*
         Function for finding zero offsets of ADC and reading ADC off SPI
